@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Commenting</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Document Commenting Tool</h1>
+
+    <h2>Upload a DOCX Document</h2>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="document" required>
+        <input type="submit" value="Upload">
+    </form>
+
+    <hr>
+
+    {% if paragraphs %}
+    <h2>Document:</h2>
+    <div id="document">
+        {% for paragraph in paragraphs %}
+            <div class="paragraph" data-id="{{ loop.index0 }}">
+                <p><strong>Paragraph {{ loop.index }}:</strong> {{ paragraph }}</p>
+                <button onclick="commentOnParagraph({{ loop.index0 }})">Comment</button>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>All Comments:</h2>
+    <div id="comments">
+        {% for comment in comments %}
+            <div>
+                <strong>Country:</strong> {{ comment[1] }} |
+                <strong>Paragraph:</strong> {{ comment[2] }} |
+                <strong>IO Ref:</strong> {{ comment[3] }} |
+                <strong>Comment:</strong> {{ comment[4] }}
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+
+    <button onclick="window.location.href='/export_comments'">Export All Comments</button>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>
