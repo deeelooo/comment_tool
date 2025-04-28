@@ -8,9 +8,10 @@ from docx import Document
 import matplotlib.pyplot as plt
 import io
 import base64
+import eventlet
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
 
 UPLOAD_FOLDER = 'uploads'
 EXPORT_FOLDER = 'export'
@@ -127,7 +128,7 @@ def heatmap():
     ax.set_yticks([])
     ax.set_xlabel('Paragraph ID')
     ax.set_title('Comment Concentration Heatmap')
-    ax.set_xlim(-1, max(comment_counts.index)+1)
+    ax.set_xlim(-1, max(comment_counts.index) + 1)
 
     for idx, count in zip(comment_counts.index, comment_counts.values):
         ax.text(idx, 1.05, str(count), ha='center', va='bottom', fontsize=8)
@@ -145,6 +146,7 @@ def heatmap():
     '''
     return html
 
+# Corrected cloud-friendly server startup
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    socketio.run(app, host='0.0.0.0', port=port)
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)
